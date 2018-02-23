@@ -31,21 +31,21 @@ def is_prime(n):
     return True
 
 
-def lcm(a, b):
+def least_common_multiple(a, b):
     return a * b // gcd(a, b)
 
 
 # based on : https://stackoverflow.com/questions/4798654/modular-multiplicative-inverse-function-in-python
-def egcd(a, b):
+def extended_greatest_common_divisor(a, b):
     if a == 0:
         return b, 0, 1
     else:
-        g, y, x = egcd(b % a, a)
+        g, y, x = extended_greatest_common_divisor(b % a, a)
         return g, x - (b // a) * y, y
 
 
-def modinv(a, m):
-    g, x, y = egcd(a, m)
+def modular_multiplicative_inverse(a, m):
+    g, x, y = extended_greatest_common_divisor(a, m)
     if g != 1:
         raise Exception('modular inverse does not exist')
     else:
@@ -69,15 +69,17 @@ def random_prime(bits):
 def generate_keys(key_size):
     fix_exponent = 65537
     while True:
-        p = random_prime(key_size)
-        q = random_prime(key_size)
-        diff = lcm(p - 1, q - 1)
+        # p = random_prime(key_size)
+        # q = random_prime(key_size)
+        p = 61
+        q = 53
+        diff = least_common_multiple(p - 1, q - 1)
         print("p value:")
         print(p)
         if gcd(fix_exponent, diff) != 1 or (abs(p - q) >> (key_size//2 - 100)) == 0:
             break
 
-    private_key = modinv(fix_exponent, diff)
+    private_key = modular_multiplicative_inverse(fix_exponent, diff)
     public_key_1 = p * q
     public_key_2 = fix_exponent
     return private_key, public_key_1, public_key_2
