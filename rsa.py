@@ -7,6 +7,7 @@ from math import gcd
 
 
 class RSA:
+    """ A simple RSA implementation based on https://en.wikipedia.org/wiki/RSA_(cryptosystem)#Code """
     def __is_prime(self, n):
         print(" test prime ")
         print(n)
