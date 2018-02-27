@@ -26,7 +26,8 @@ class RSA:
         i = 5
         j = 2
 
-        while i * i <= n:
+        sqrtn = math.sqrt(n) + 1
+        while i <= sqrtn:
             if n % i == 0:
                 return False
             i += j
