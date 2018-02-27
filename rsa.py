@@ -69,8 +69,8 @@ class RSA:
     def generate_keys(self, key_size):
         fix_exponent = 65537
         while True:
-            p = 61  # random_prime(key_size / 2)
-            q = 53  # random_prime(key_size / 2)
+            p = self.__random_prime(key_size / 2)
+            q = self.__random_prime(key_size / 2)
             diff = self.__least_common_multiple(p - 1, q - 1)
             print("p value:")
             print(p)
@@ -99,10 +99,10 @@ class RSA:
             decrypt += chr(int(message_in_hex[index] + message_in_hex[index + 1], 16))
         return decrypt
 
-    def encrypt(self, public_key_1, public_key_2, message):
+    def encrypt(self, message, public_key_1, public_key_2):
         message_in_int = self.__string_to_int(message)
-
-        return str(pow(message_in_int, public_key_1, public_key_2))
+        print(message_in_int)
+        return str(pow(message_in_int, public_key_2, public_key_1))
 
     def decrypt(self, encrypted_message, private_key, public_key_1):
         message = self.__int_to_string(pow(int(encrypted_message), private_key, public_key_1))
