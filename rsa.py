@@ -7,7 +7,10 @@ from math import gcd
 
 
 class RSA:
-    """ A simple RSA implementation based on https://en.wikipedia.org/wiki/RSA_(cryptosystem)#Code """
+    """ A simple RSA implementation based on https://en.wikipedia.org/wiki/RSA_(cryptosystem) (Supports: 256 ascii characters) #Code """
+
+    BYTE_PER_CHAR = 2
+
     def __is_prime(self, n):
         print(" test prime ")
         print(n)
@@ -66,10 +69,8 @@ class RSA:
     def generate_keys(self, key_size):
         fix_exponent = 65537
         while True:
-            # p = random_prime(key_size)
-            # q = random_prime(key_size)
-            p = 61
-            q = 53
+            p = 61  # random_prime(key_size / 2)
+            q = 53  # random_prime(key_size / 2)
             diff = self.__least_common_multiple(p - 1, q - 1)
             print("p value:")
             print(p)
@@ -81,10 +82,28 @@ class RSA:
         public_key_2 = fix_exponent
         return private_key, public_key_1, public_key_2
 
+    def __string_to_int(self, message):
+        encrypted_message = ""
+        for c in message:
+            string_hex = hex(ord(c)).replace("0x", "")
+            while len(string_hex) < self.BYTE_PER_CHAR:  # Ascii characters all fits between 0 and 256 (0x00 and 0xff)
+                string_hex = "0" + string_hex
+            encrypted_message += string_hex
+        return int(encrypted_message, 16)
+
+    def __int_to_string(self, message):
+        message_in_hex = hex(int(message))  # Convert the int in hexa
+        message_in_hex = message_in_hex[2:]  # Remove the "0x"
+        decrypt = ""
+        for index in range(0, len(message_in_hex), self.BYTE_PER_CHAR):  # We take each BYTE_PER_CHAR digits to convert to char
+            decrypt += chr(int(message_in_hex[index] + message_in_hex[index + 1], 16))
+        return decrypt
+
     def encrypt(self, public_key_1, public_key_2, message):
-        encrypted_message = pow(int(message), public_key_1, public_key_2)
-        return encrypted_message
+        message_in_int = self.__string_to_int(message)
+
+        return str(pow(message_in_int, public_key_1, public_key_2))
 
     def decrypt(self, encrypted_message, private_key, public_key_1):
-        message = str(pow(int(encrypted_message), private_key, public_key_1))
+        message = self.__int_to_string(pow(int(encrypted_message), private_key, public_key_1))
         return message
