@@ -12,8 +12,8 @@ class RSA:
     BYTE_PER_CHAR = 2
 
     def __is_prime(self, n):
-        print(" test prime ")
-        print(n)
+        # print(" test prime ")
+        # print(n)
         if n == 2:
             return True
         if n == 3:
@@ -35,6 +35,14 @@ class RSA:
             j = 6 - j
 
         return True
+
+    def est_premier(self, nombre):
+        if nombre % 2 == 0:
+            return False
+        elif any(nombre % i == 0 for i in range(3, int(math.sqrt(nombre)) + 1, 2)):
+            return False
+        else:
+            return True
 
     def __least_common_multiple(self, a, b):
         return a * b // gcd(a, b)
@@ -58,14 +66,40 @@ class RSA:
         min_value = math.sqrt(2) * (2 ** (bits - 1))
         max_value = (2 ** bits) - 1
         while True:
-            value = random.randrange(min_value, max_value)
-            print("random value:")
-            print(value)
+            value = random.randrange(int(min_value), int(max_value))
+            # print("random value:")
+            # print(value)
 
             if self.__is_prime(value):
-                print("fin test prime")
+                # print("fin test prime")
                 return value
-            print("fin test prime")
+            # print("fin test prime")
+
+    def generer_premier_aleatoire(self, bits):
+        min = int(math.sqrt(2) * 2 ** (bits - 1))
+        max = int(2 ** bits - 1)
+
+        list_nombres_premier = [n for n in range(min, max) if self.__is_prime(n)]
+
+        return random.choice(list_nombres_premier)
+
+    def generer_cles(self, key_size):
+        e = 65537
+        # print("Generer_cle")
+        while True:
+            p = self.generer_premier_aleatoire(key_size / 2)
+            q = self.generer_premier_aleatoire(key_size / 2)
+            phi = (p - 1) * (q - 1)
+            lam = self.__least_common_multiple(p - 1, q - 1)
+
+            if gcd(e, lam) != 1 or abs(p - q) >= 2 ** (key_size / 2 - 100):
+                break
+
+        # cle_publique = (p * q, e)
+        cle_privee = self.__modular_multiplicative_inverse(e, phi)
+
+        return cle_privee, p * q, e
+
 
     def generate_keys(self, key_size):
         fix_exponent = 65537
@@ -73,9 +107,9 @@ class RSA:
             p = self.__random_prime(key_size / 2)
             q = self.__random_prime(key_size / 2)
             diff = self.__least_common_multiple(p - 1, q - 1)
-            print("p value:")
-            print(p)
-            if gcd(fix_exponent, diff) != 1 or (abs(p - q) >> (key_size//2 - 100)) == 0:
+            # print("p value:")
+            # print(p)
+            if gcd(fix_exponent, diff) != 1 or abs(p - q) >= 2 ** (key_size//2 - 100):
                 break
 
         private_key = self.__modular_multiplicative_inverse(fix_exponent, diff)
@@ -102,7 +136,7 @@ class RSA:
 
     def encrypt(self, message, public_key_1, public_key_2):
         message_in_int = self.__string_to_int(message)
-        print(message_in_int)
+        # print(message_in_int)
         return str(pow(message_in_int, public_key_2, public_key_1))
 
     def decrypt(self, encrypted_message, private_key, public_key_1):
