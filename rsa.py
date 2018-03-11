@@ -12,8 +12,6 @@ class RSA:
     BYTE_PER_CHAR = 2
 
     def __is_prime(self, n):
-        # print(" test prime ")
-        # print(n)
         if n == 2:
             return True
         if n == 3:
@@ -31,7 +29,6 @@ class RSA:
             if n % i == 0:
                 return False
             i += j
-            # print(i)
             j = 6 - j
 
         return True
@@ -59,13 +56,9 @@ class RSA:
         max_value = (2 ** bits) - 1
         while True:
             value = random.randrange(int(min_value), int(max_value))
-            # print("random value:")
-            # print(value)
 
             if self.__is_prime(value):
-                # print("fin test prime")
                 return value
-            # print("fin test prime")
 
     def generate_keys(self, key_size):
         fix_exponent = 65537
@@ -73,8 +66,6 @@ class RSA:
             p = self.__random_prime(key_size / 2)
             q = self.__random_prime(key_size / 2)
             diff = self.__least_common_multiple(p - 1, q - 1)
-            # print("p value:")
-            # print(p)
             if gcd(fix_exponent, diff) != 1 or abs(p - q) >= 2 ** (key_size//2 - 100):
                 break
 
@@ -102,7 +93,6 @@ class RSA:
 
     def encrypt(self, message, public_key_1, public_key_2):
         message_in_int = self.__string_to_int(message)
-        # print(message_in_int)
         return str(pow(message_in_int, public_key_2, public_key_1))
 
     def decrypt(self, encrypted_message, private_key, public_key_1):
