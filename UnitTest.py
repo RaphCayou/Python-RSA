@@ -1,31 +1,22 @@
 from rsa import RSA
 my_rsa = RSA()
 
-private, public_1, public_2 = my_rsa.generate_keys(64)
-print("Keys generated(64 bits): private:" + str(private) + " public 1: " + str(public_1) + " public 2: " + str(public_2))
-original_text = "ABCD"
-encrypt_text = my_rsa.encrypt(original_text, public_1, public_2)
-print("Encrypted " + original_text + " to :" + str(encrypt_text))
-decrypted = my_rsa.decrypt(encrypt_text, private, public_1)
-print("And now the decrypted version:" + decrypted)
-print("Test as succeed :" + str(original_text == decrypted))
 
-print()
-private, public_1, public_2 = my_rsa.generate_keys(32)
-print("Keys generated(64 bits): private:" + str(private) + " public 1: " + str(public_1) + " public 2: " + str(public_2))
-original_text = "GO"
-encrypt_text = my_rsa.encrypt(original_text, public_1, public_2)
-print("Encrypted " + original_text + " to :" + str(encrypt_text))
-decrypted = my_rsa.decrypt(encrypt_text, private, public_1)
-print("And now the decrypted version:" + decrypted)
-print("Test as succeed :" + str(original_text == decrypted))
+def test_rsa(key_size, original_text):
+    print()
+    private_key, public_key_1, public_key_2 = my_rsa.generate_keys(key_size)
+    print("Keys generated({key_size} bits): private: {private_key} public 1: {public_key_1} public 2: {public_key_2}"
+          .format(**locals()))
 
-print()
-private, public_1, public_2 = my_rsa.generate_keys(96)
-print("Keys generated(64 bits): private:" + str(private) + " public 1: " + str(public_1) + " public 2: " + str(public_2))
-original_text = "Longer"
-encrypt_text = my_rsa.encrypt(original_text, public_1, public_2)
-print("Encrypted " + original_text + " to :" + str(encrypt_text))
-decrypted = my_rsa.decrypt(encrypt_text, private, public_1)
-print("And now the decrypted version:" + decrypted)
-print("Test as succeed :" + str(original_text == decrypted))
+    encrypted_text = my_rsa.encrypt(original_text, public_key_1, public_key_2)
+    print("Encrypted {original_text} to {encrypted_text}".format(**locals()))
+
+    decrypted_text = my_rsa.decrypt(encrypted_text, private_key, public_key_1)
+    print("Decrypted {encrypted_text} to {decrypted_text}".format(**locals()))
+
+    print("Test as succeed :{}".format(str(original_text == decrypted_text)))
+
+
+test_rsa(32, "Go!")
+test_rsa(64, "AB%CD")
+test_rsa(96, "Longer word")
