@@ -14,7 +14,7 @@ def test_rsa(key_size, original_text):
     decrypted_text = my_rsa.decrypt(encrypted_text, private_key, public_key_1)
     print("Decrypted {encrypted_text} to {decrypted_text}".format(**locals()))
 
-    print("Test as succeed :{}".format(str(original_text == decrypted_text)))
+    print("Test success :{}".format(str(original_text == decrypted_text)))
 
 
 test_rsa(32, "Go!")
