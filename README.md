@@ -1,3 +1,3 @@
 # Python-RSA
 
-Implementation of the RSA cryptographic algorithm in python for a university project.
+A [RSA](https://en.wikipedia.org/wiki/RSA_(cryptosystem)) cryptographic algorithm implementation in Python for a university project.
